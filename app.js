@@ -124,7 +124,6 @@ function imageChooser(randomIndex,totalArray){
 }
 
 // collects the different HTML elements needed to run event
-let imageLanding = document.getElementById('imagePlacement');
 let leftImage = document.getElementById('leftImage');
 let centerImage = document.getElementById('centerImage');
 let rightImage = document.getElementById('rightImage');
