@@ -40,12 +40,8 @@ function numberGenerator(lengthOfArray){
     return randomNumber;
 }
 
-// function newIndexcheckTemp (indexLocation,tempImageIndex){
-//      while(indexLocation === tempImageIndex){
-//          indexLocation = numberGenerator();
-//      }
-// }
 
+// creates a modified array that does not include the last displayed images
 function modifiedPictures(){
 
     let newSelectionArray = [];
@@ -53,43 +49,31 @@ function modifiedPictures(){
 
     for (let i = 0; i < allImages.length; i++){
         if (allImages[i].name === nameArray[0]){
-            console.log(allImages[i]);
             continue;
         }
         if (allImages[i].name === nameArray[1]){
-            console.log(allImages[i]);
             continue;
         }
         if (allImages[i].name === nameArray[2]){
-            console.log(allImages[i]);
+            continue;
         }
         else{
             newSelectionArray.push(allImages[i]);
         }
 
     }
-    console.log(newSelectionArray);
+
     return newSelectionArray;
 }
 
 
 //random number index
 function randomNumberIndex (length){
-    
+
     let totalIndex = [];
     for(let i =0; i< 3; i++){
         totalIndex.push(numberGenerator(length));
     }
-    // let leftIndex = numberGenerator();
-    // newIndexcheckTemp(leftIndex,tempImage[0]);
-
-    // let centerIndex = numberGenerator();
-    // newIndexcheckTemp(centerIndex,tempImage[1]);
-
-    // let rightIndex = numberGenerator();
-    // newIndexcheckTemp(rightIndex,tempImage[2]);
-
-    // let totalIndex=[leftIndex,centerIndex,rightIndex];
 
     while(totalIndex[0]=== totalIndex[1]||totalIndex[0] === totalIndex[2]||totalIndex[1]=== totalIndex[2]){
 
@@ -98,11 +82,11 @@ function randomNumberIndex (length){
         totalIndex[2] = numberGenerator(length);
         console.log('how long is too long');
     }
-    console.log(totalIndex);
+
     for(let i = 0; i<totalIndex.length; i++){
         tempImage[i] = totalIndex[i];
     }
-    console.log(totalIndex);
+
 
     return totalIndex;
 }
@@ -158,21 +142,54 @@ function imageClicker(event){
     for (let i =0; i <allImages.length; i++){
         if(imageName.name === allImages[i].name){
             allImages[i].imageVote++;
-            console.log(allImages[i].name,'The amount of votes: ' + allImages[i].imageVote + ' per ' +allImages[i].imageView);
             break;
         }
     }
-
+    console.log(totalVotes);
+    if (totalVotes<25){
     let modifiedAllImages = modifiedPictures();
     let newRandom =randomNumberIndex(modifiedAllImages.length);
     nameArray = imageChooser(newRandom,modifiedAllImages);
+    }
+    else{
+        leftImage.removeEventListener('click',imageClicker);
+        centerImage.removeEventListener('click',imageClicker);
+        rightImage.removeEventListener('click',imageClicker);
+        let parentEl = document.getElementById('tab');
+        let buttonEl = document.createElement('button');
+        buttonEl.setAttribute('id','buttonResults');
+        buttonEl.innerText = 'View Results';
+        parentEl.appendChild(buttonEl);
+        let buttonResults = document.getElementById('buttonResults');
+        buttonResults.addEventListener('click',printResults);
+
+    }
 }
+
+
+function printResults (event){
+    event.preventDefault();
+    let ulEl = document.getElementById('results');
+    ulEl.innerHTML = '';
+    for(let i = 0; i<allImages.length; i++){
+        console.log ('woot');
+        let liEl = document.createElement('li');
+        liEl.innerText =allImages[i].name + ' has ' + allImages[i].imageVote + ' votes, and was seen ' + allImages[i].imageView + ' times.';
+        ulEl.appendChild(liEl);
+
+    }
+}
+
+
+
+
+
 
 leftImage.addEventListener('click',imageClicker);
 centerImage.addEventListener('click',imageClicker);
 rightImage.addEventListener('click',imageClicker);
 
-console.log(allImages);
+// console.log(allImages);
 let starterIndex = randomNumberIndex(allImages.length);
 let nameArray = imageChooser(starterIndex,allImages);
 
