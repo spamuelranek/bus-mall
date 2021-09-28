@@ -171,15 +171,63 @@ function printResults (event){
     let ulEl = document.getElementById('results');
     ulEl.innerHTML = '';
     for(let i = 0; i<allImages.length; i++){
-        console.log ('woot');
         let liEl = document.createElement('li');
         liEl.innerText =allImages[i].name + ' has ' + allImages[i].imageVote + ' votes, and was seen ' + allImages[i].imageView + ' times.';
         ulEl.appendChild(liEl);
 
     }
+    createTable();
 }
 
+function infoStripper (thing){
+    let info =[];
+    for (let i = 0; i<allImages.length; i++){
+        info.push(allImages[i].thing);
+    }
+    return info;
+}
 
+function createTable(){
+
+    let title =[];
+    let views =[];
+    let clicks =[];
+    for (let i = 0; i<allImages.length; i++){
+        title.push(allImages[i].name);
+        views.push(allImages[i].imageView);
+        clicks.push(allImages[i].imageVote);
+    }
+
+const ctx = document.getElementById('clickChart').getContext('2d');
+// let title = infoStripper(name);
+// let views = infoStripper(imageView);
+// let clicks = infoStripper(imageVote);
+const voteChart = new Chart(ctx, {
+    type: 'bar',
+    data:{
+        labels:title,
+        datasets:[
+        {
+            label:'# of clicks',
+            backgroundColor: 'blue',
+            data:clicks,
+        },
+        {
+            label:'# of views',
+            backgroundColor: 'red',
+            data:views,
+        }
+    ]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+}
 
 
 
