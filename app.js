@@ -75,6 +75,7 @@ function randomNumberIndex (length){
         totalIndex.push(numberGenerator(length));
     }
 
+    // checks to make sure there is no duplicates. Technically possible infinite loop but very unlikely
     while(totalIndex[0]=== totalIndex[1]||totalIndex[0] === totalIndex[2]||totalIndex[1]=== totalIndex[2]){
 
         totalIndex[0] = numberGenerator(length);
@@ -83,6 +84,7 @@ function randomNumberIndex (length){
         console.log('how long is too long');
     }
 
+    //stores final index in temp to be used to create modified list
     for(let i = 0; i<totalIndex.length; i++){
         tempImage[i] = totalIndex[i];
     }
@@ -133,11 +135,13 @@ let rightImage = document.getElementById('rightImage');
 function imageClicker(event){
 
     event.preventDefault;
-
+    
+    //increments the total votes global variable
     totalVotes++;
 
     let imageName = event.target;
 
+    //checks what image was clicked and increments the imageVote value
     for (let i =0; i <allImages.length; i++){
         if(imageName.name === allImages[i].name){
             allImages[i].imageVote++;
@@ -145,41 +149,100 @@ function imageClicker(event){
         }
     }
     console.log(totalVotes);
-    if (totalVotes<25){
-    let modifiedAllImages = modifiedPictures();
-    let newRandom =randomNumberIndex(modifiedAllImages.length);
-    nameArray = imageChooser(newRandom,modifiedAllImages);
-    }
-    else{
-        leftImage.removeEventListener('click',imageClicker);
-        centerImage.removeEventListener('click',imageClicker);
-        rightImage.removeEventListener('click',imageClicker);
-        let parentEl = document.getElementById('tab');
-        let buttonEl = document.createElement('button');
-        buttonEl.setAttribute('id','buttonResults');
-        buttonEl.innerText = 'View Results';
-        parentEl.appendChild(buttonEl);
-        let buttonResults = document.getElementById('buttonResults');
-        buttonResults.addEventListener('click',printResults);
 
+    //this is what runs while voting is open
+    if (totalVotes<25){
+        beforeVotingClosed();
+        }
+    else{
+        afterVotingClosed();
     }
 }
 
+//this is what runs while voting is open
+function beforeVotingClosed(){
+    let modifiedAllImages = modifiedPictures();
+    let newRandom =randomNumberIndex(modifiedAllImages.length);
+    nameArray = imageChooser(newRandom,modifiedAllImages);
+}
 
+//this is what runs when voting is closed
+function afterVotingClosed(){
+    //removes functionality of picture clicks
+    leftImage.removeEventListener('click',imageClicker);
+    centerImage.removeEventListener('click',imageClicker);
+    rightImage.removeEventListener('click',imageClicker);
+
+    //creates result button
+    let parentEl = document.getElementById('tab');
+    let buttonEl = document.createElement('button');
+    buttonEl.setAttribute('id','buttonResults');
+    buttonEl.innerText = 'View Results';
+    parentEl.appendChild(buttonEl);
+
+    //adds functionality to button click
+    let buttonResults = document.getElementById('buttonResults');
+    buttonResults.addEventListener('click',printResults);
+
+}
+
+// event function on press of result button
 function printResults (event){
     event.preventDefault();
     let ulEl = document.getElementById('results');
     ulEl.innerHTML = '';
     for(let i = 0; i<allImages.length; i++){
-        console.log ('woot');
         let liEl = document.createElement('li');
         liEl.innerText =allImages[i].name + ' has ' + allImages[i].imageVote + ' votes, and was seen ' + allImages[i].imageView + ' times.';
         ulEl.appendChild(liEl);
 
     }
+    createTable();
 }
 
 
+function createTable(){
+
+    //produces data sets
+    let title =[];
+    let views =[];
+    let clicks =[];
+    for (let i = 0; i<allImages.length; i++){
+        title.push(allImages[i].name);
+        views.push(allImages[i].imageView);
+        clicks.push(allImages[i].imageVote);
+    }
+
+    //identifes location for table
+    const ctx = document.getElementById('clickChart').getContext('2d');
+
+    //creates chart from data above
+    const voteChart = new Chart(ctx, {
+        type: 'bar',
+        data:{
+            labels:title,
+            datasets:[
+            {
+                label:'# of clicks',
+                backgroundColor: 'blue',
+                data:clicks,
+            },
+            {
+                label:'# of views',
+                backgroundColor: 'red',
+                data:views,
+            }
+        ]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+}
 
 
 
