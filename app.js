@@ -133,11 +133,13 @@ let rightImage = document.getElementById('rightImage');
 function imageClicker(event){
 
     event.preventDefault;
-
+    
+    //increments the total votes global variable
     totalVotes++;
 
     let imageName = event.target;
 
+    //checks what image was clicked and increments the imageVote value
     for (let i =0; i <allImages.length; i++){
         if(imageName.name === allImages[i].name){
             allImages[i].imageVote++;
@@ -145,27 +147,37 @@ function imageClicker(event){
         }
     }
     console.log(totalVotes);
+
+    //this is what runs while voting is open
     if (totalVotes<25){
-    let modifiedAllImages = modifiedPictures();
-    let newRandom =randomNumberIndex(modifiedAllImages.length);
-    nameArray = imageChooser(newRandom,modifiedAllImages);
-    }
+        let modifiedAllImages = modifiedPictures();
+        let newRandom =randomNumberIndex(modifiedAllImages.length);
+        nameArray = imageChooser(newRandom,modifiedAllImages);
+        }
+
+    //this is what runs when voting is closed
     else{
+
+        //removes functionality of picture clicks
         leftImage.removeEventListener('click',imageClicker);
         centerImage.removeEventListener('click',imageClicker);
         rightImage.removeEventListener('click',imageClicker);
+
+        //creates result button
         let parentEl = document.getElementById('tab');
         let buttonEl = document.createElement('button');
         buttonEl.setAttribute('id','buttonResults');
         buttonEl.innerText = 'View Results';
         parentEl.appendChild(buttonEl);
+
+        //adds functionality to button click
         let buttonResults = document.getElementById('buttonResults');
         buttonResults.addEventListener('click',printResults);
 
     }
 }
 
-
+// event function on press of result button
 function printResults (event){
     event.preventDefault();
     let ulEl = document.getElementById('results');
@@ -179,16 +191,10 @@ function printResults (event){
     createTable();
 }
 
-function infoStripper (thing){
-    let info =[];
-    for (let i = 0; i<allImages.length; i++){
-        info.push(allImages[i].thing);
-    }
-    return info;
-}
 
 function createTable(){
 
+    //produces data sets
     let title =[];
     let views =[];
     let clicks =[];
@@ -198,35 +204,35 @@ function createTable(){
         clicks.push(allImages[i].imageVote);
     }
 
-const ctx = document.getElementById('clickChart').getContext('2d');
-// let title = infoStripper(name);
-// let views = infoStripper(imageView);
-// let clicks = infoStripper(imageVote);
-const voteChart = new Chart(ctx, {
-    type: 'bar',
-    data:{
-        labels:title,
-        datasets:[
-        {
-            label:'# of clicks',
-            backgroundColor: 'blue',
-            data:clicks,
+    //identifes location for table
+    const ctx = document.getElementById('clickChart').getContext('2d');
+
+    //creates chart from data above
+    const voteChart = new Chart(ctx, {
+        type: 'bar',
+        data:{
+            labels:title,
+            datasets:[
+            {
+                label:'# of clicks',
+                backgroundColor: 'blue',
+                data:clicks,
+            },
+            {
+                label:'# of views',
+                backgroundColor: 'red',
+                data:views,
+            }
+        ]
         },
-        {
-            label:'# of views',
-            backgroundColor: 'red',
-            data:views,
-        }
-    ]
-    },
-    options: {
-        scales: {
-            y: {
-                beginAtZero: true
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
             }
         }
-    }
-});
+    });
 }
 
 
