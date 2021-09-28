@@ -75,6 +75,7 @@ function randomNumberIndex (length){
         totalIndex.push(numberGenerator(length));
     }
 
+    // checks to make sure there is no duplicates. Technically possible infinite loop but very unlikely
     while(totalIndex[0]=== totalIndex[1]||totalIndex[0] === totalIndex[2]||totalIndex[1]=== totalIndex[2]){
 
         totalIndex[0] = numberGenerator(length);
@@ -83,6 +84,7 @@ function randomNumberIndex (length){
         console.log('how long is too long');
     }
 
+    //stores final index in temp to be used to create modified list
     for(let i = 0; i<totalIndex.length; i++){
         tempImage[i] = totalIndex[i];
     }
@@ -150,31 +152,38 @@ function imageClicker(event){
 
     //this is what runs while voting is open
     if (totalVotes<25){
-        let modifiedAllImages = modifiedPictures();
-        let newRandom =randomNumberIndex(modifiedAllImages.length);
-        nameArray = imageChooser(newRandom,modifiedAllImages);
+        beforeVotingClosed();
         }
-
-    //this is what runs when voting is closed
     else{
-
-        //removes functionality of picture clicks
-        leftImage.removeEventListener('click',imageClicker);
-        centerImage.removeEventListener('click',imageClicker);
-        rightImage.removeEventListener('click',imageClicker);
-
-        //creates result button
-        let parentEl = document.getElementById('tab');
-        let buttonEl = document.createElement('button');
-        buttonEl.setAttribute('id','buttonResults');
-        buttonEl.innerText = 'View Results';
-        parentEl.appendChild(buttonEl);
-
-        //adds functionality to button click
-        let buttonResults = document.getElementById('buttonResults');
-        buttonResults.addEventListener('click',printResults);
-
+        afterVotingClosed();
     }
+}
+
+//this is what runs while voting is open
+function beforeVotingClosed(){
+    let modifiedAllImages = modifiedPictures();
+    let newRandom =randomNumberIndex(modifiedAllImages.length);
+    nameArray = imageChooser(newRandom,modifiedAllImages);
+}
+
+//this is what runs when voting is closed
+function afterVotingClosed(){
+    //removes functionality of picture clicks
+    leftImage.removeEventListener('click',imageClicker);
+    centerImage.removeEventListener('click',imageClicker);
+    rightImage.removeEventListener('click',imageClicker);
+
+    //creates result button
+    let parentEl = document.getElementById('tab');
+    let buttonEl = document.createElement('button');
+    buttonEl.setAttribute('id','buttonResults');
+    buttonEl.innerText = 'View Results';
+    parentEl.appendChild(buttonEl);
+
+    //adds functionality to button click
+    let buttonResults = document.getElementById('buttonResults');
+    buttonResults.addEventListener('click',printResults);
+
 }
 
 // event function on press of result button
