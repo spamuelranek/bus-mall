@@ -1,3 +1,26 @@
 img{
     width: 200px;
+    vertical-align: top;
+}
+
+article{
+    display: inline-block;
+    min-height: 250px;
+    max-height: 600x;
+    min-width: 610px;
+    vertical-align: top;
+
+}
+aside{
+    display: inline-block;
+}
+
+canvas{
+    max-width: 700px;
+    max-height: 400px;
+    margin-bottom: 30px;
+}
+
+section{
+    margin-top: 100px;
 }
