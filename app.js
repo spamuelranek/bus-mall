@@ -34,6 +34,26 @@ new PictureInfo('Unicorn', 'unicorn.jpeg');
 new PictureInfo('Water-can', 'water-can.jpeg');
 let testCase = new PictureInfo('Wine-glass', 'wine-glass.jpeg');
 
+addPreviousRounds();
+
+//adds view and click counts from previous rounds
+function addPreviousRounds(){
+
+    // runs the retrieve function and stores it
+    let previousAllImages = retrieveValues();
+
+    //updates the views and clicks
+    if(previousAllImages !== null){
+        for(let i =0; i<allImages.length; i ++){
+            if(previousAllImages[i].name === allImages[i].name){
+                allImages[i].imageView = previousAllImages[i].imageView;
+                allImages[i].imageVote = previousAllImages[i].imageVote;
+            }
+        }
+    }
+
+}
+
 //random number generator
 function numberGenerator(lengthOfArray){
     let randomNumber = Math.floor(Math.random() * lengthOfArray);
@@ -45,7 +65,7 @@ function numberGenerator(lengthOfArray){
 function modifiedPictures(){
 
     let newSelectionArray = [];
-    console.log(nameArray);
+    // console.log(nameArray);
 
     for (let i = 0; i < allImages.length; i++){
         if (allImages[i].name === nameArray[0]){
@@ -148,7 +168,7 @@ function imageClicker(event){
             break;
         }
     }
-    console.log(totalVotes);
+    // console.log(totalVotes);
 
     //this is what runs while voting is open
     if (totalVotes<25){
@@ -197,11 +217,34 @@ function printResults (event){
         ulEl.appendChild(liEl);
 
     }
+    let chartParent = document.getElementById('imagePlacement');
+    let chartCreate = document.createElement('canvas');
+    chartCreate.setAttribute('id','clickChart');
+    chartParent.appendChild(chartCreate);
     createTable();
 }
 
+//stores all images in local storage
+function storeValues(){
+    let storeTest = [];
+    for(let i= 0; i<allImages.length; i++){
+        storeTest.push(allImages[i]);
+    }
+    let modifiedTest = JSON.stringify(storeTest);
+    let storedValue = localStorage.setItem('images',modifiedTest);
+
+}
+
+// retrieves all images from local storage
+function retrieveValues(){
+    let retrievedTest = localStorage.getItem('images');
+    let unmodifiedTest = JSON.parse(retrievedTest);
+    return unmodifiedTest;
+}
 
 function createTable(){
+
+    storeValues();
 
     //produces data sets
     let title =[];
@@ -254,4 +297,5 @@ rightImage.addEventListener('click',imageClicker);
 // console.log(allImages);
 let starterIndex = randomNumberIndex(allImages.length);
 let nameArray = imageChooser(starterIndex,allImages);
+
 
