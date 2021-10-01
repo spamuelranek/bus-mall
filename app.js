@@ -65,8 +65,8 @@ function numberGenerator(lengthOfArray){
 function modifiedPictures(){
 
     let newSelectionArray = [];
-    // console.log(nameArray);
 
+    // filters out previous round of pictures for next selection group
     for (let i = 0; i < allImages.length; i++){
         if (allImages[i].name === nameArray[0]){
             continue;
@@ -211,12 +211,16 @@ function printResults (event){
     event.preventDefault();
     let ulEl = document.getElementById('results');
     ulEl.innerHTML = '';
+
+    //written results of votes
     for(let i = 0; i<allImages.length; i++){
         let liEl = document.createElement('li');
         liEl.innerText =allImages[i].name + ' has ' + allImages[i].imageVote + ' votes, and was seen ' + allImages[i].imageView + ' times.';
         ulEl.appendChild(liEl);
 
     }
+
+    //creates chart and parent element
     let chartParent = document.getElementById('imagePlacement');
     let chartCreate = document.createElement('canvas');
     chartCreate.setAttribute('id','clickChart');
@@ -224,7 +228,7 @@ function printResults (event){
     createTable();
 }
 
-//stores all images in local storage
+//function to store all image Objects in local storage
 function storeValues(){
     let storeTest = [];
     for(let i= 0; i<allImages.length; i++){
@@ -242,8 +246,10 @@ function retrieveValues(){
     return unmodifiedTest;
 }
 
+// associated function to create chart.js table
 function createTable(){
 
+    //actually stores all image Ojects
     storeValues();
 
     //produces data sets
@@ -289,12 +295,12 @@ function createTable(){
 
 
 
-
+//sets event listeners on pictures
 leftImage.addEventListener('click',imageClicker);
 centerImage.addEventListener('click',imageClicker);
 rightImage.addEventListener('click',imageClicker);
 
-// console.log(allImages);
+//creates intial selection of pictures
 let starterIndex = randomNumberIndex(allImages.length);
 let nameArray = imageChooser(starterIndex,allImages);
 
