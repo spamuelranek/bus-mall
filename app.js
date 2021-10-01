@@ -21,7 +21,7 @@ new PictureInfo('Boots','boots.jpeg');
 new PictureInfo('Breakfast','breakfast.jpeg');
 new PictureInfo('Bubblegum','bubblegum.jpeg');
 new PictureInfo('Chair','chair.jpeg');
-new PictureInfo('Cthulhu','Cthulhu.jpeg');
+new PictureInfo('Cthulhu','cthulhu.jpeg');
 new PictureInfo('Dog Duck','dog-duck.jpeg');
 new PictureInfo('Dragon','dragon.jpeg');
 new PictureInfo('Pen','pen.jpeg');
